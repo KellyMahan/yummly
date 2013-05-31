@@ -17,8 +17,12 @@ module Yummly
     # @example
     #   recipe = Yummly::Api.find('French-Onion-Soup-The-Pioneer-Woman-Cooks-_-Ree-Drummond-41364')
     def self.find(id)
-      recipe_json = Yummly::Connection.get("recipe/#{id}")
-      Yummly::Recipe.new(recipe_json)
+      begin
+        recipe_json = Yummly::Connection.get("recipe/#{id}")
+        Yummly::Recipe.new(recipe_json)
+      rescue Yummly::NotFoundError
+        return nil
+      end
     end
 
     # Searches for recipes that match the supplied search terms.
